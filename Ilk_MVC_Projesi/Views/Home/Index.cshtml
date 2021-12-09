@@ -1,0 +1,29 @@
+﻿
+@model List<Urun>//küçük model 
+
+@{
+    ViewData["Title"] = "Home Page";
+    string mesaj = "ahhmet senyuz";
+    Random rnd = new Random();
+    //var model = UrunManager.GetUrunler(); veriyi böyle çekmek hatalı. Controllerdan çekmen lazım
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <h3>@mesaj</h3>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <ul>
+        @*for (int i = 0; i < rnd.Next(5,15); i++)
+        {
+            <li>@i</li>
+        }*@
+        @*@foreach (var item in model)
+        {
+             <li>@item.Ad : @item.Fiyat TL</li>
+        }*@
+        @foreach (var item in Model)//büyük model ama tipleri aynı
+        {
+            <li>@item.Ad : @item.Fiyat TL</li>
+        }
+    </ul>
+</div>

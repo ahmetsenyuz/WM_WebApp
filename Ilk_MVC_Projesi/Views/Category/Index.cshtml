@@ -1,0 +1,30 @@
+﻿@*controller sonr add controller sonra index içi sağ tık add view*@
+@model List<Category>
+
+    <div class="row">
+        <div class="col-9">
+            <table class="table-bordered" style="background-color : aquamarine">
+                <thead>
+                    <tr>
+                        <th>Kategori Adı</th>
+                        <th>Açıklama</th>
+                        <th>Ürün Sayısı</th>
+                        <th>Detay</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                    <tr>
+                        <td>@item.CategoryName</td>
+                        <td>@item.Description</td>
+                        <td>@item.Products.Count()</td>
+                        <td>
+                            <a class="btn btn-block btn-danger" asp-controller="Category" asp-action="Detail" asp-route-id="@item.CategoryId">Detay</a>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
