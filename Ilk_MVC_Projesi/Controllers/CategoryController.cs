@@ -1,4 +1,5 @@
 ﻿using Ilk_MVC_Projesi.Models;
+using Ilk_MVC_Projesi.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -49,10 +50,16 @@ namespace Ilk_MVC_Projesi.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult Create(Category model)
+        public IActionResult Create(CategoryViewModel model)
         {
+            if (!ModelState .IsValid) //hata var ise yakalar.
+            {
+                return View(model);
+            }
+
             var category = new Category()
             {
+                //CategoryId = 1,//hata versin diye ekledik
                 CategoryName = model.CategoryName,
                 Description = model.Description
             };
@@ -64,9 +71,27 @@ namespace Ilk_MVC_Projesi.Controllers
             }
             catch (Exception ex)
             {
+                ModelState.AddModelError(string.Empty, $"{model.CategoryName} eklenirken bir hata oluştu.");//dolar sembolüne bak. string ifade içine kod yazmaya yarıyor
+                return View(model);
             }
 
             return View();
+        }
+        public IActionResult Delete(int? categoryId)
+        {
+            var silinecek = _context.Categories.FirstOrDefault(x => x.CategoryId == categoryId);
+            try
+            {
+                _context.Categories.Remove(silinecek);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                return RedirectToAction(nameof(Detail), new { id = categoryId });
+            }
+            TempData["silinen_kategori"] = silinecek.CategoryName;
+            //TempData bir kere çalışır okunduktan sonra uçar gider
+            return RedirectToAction(nameof(Index));
         }
     }
 }

@@ -1,6 +1,12 @@
 ﻿@*controller sonr add controller sonra index içi sağ tık add view*@
 @model List<Category>
-
+@{ 
+    var silinenMesaj = @TempData["silinen_kategori"]?.ToString();
+}
+@if (!string.IsNullOrEmpty(silinenMesaj))
+{
+    <h3 class="text-danger">@silinenMesaj kategorisi başarıyla silinmiştir.</h3>
+}
     <div class="row">
         <div class="col-9">
             <table class="table-bordered" style="background-color : aquamarine">
