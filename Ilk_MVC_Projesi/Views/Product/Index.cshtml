@@ -1,0 +1,9 @@
+﻿@model List<Product>
+
+<h1>Products</h1>
+<ul>
+    @foreach (var item in Model)//büyük model ama tipleri aynı
+    {
+        <li>@item.ProductName : @item.UnitPrice</li>
+    }
+</ul>

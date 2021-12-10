@@ -1,0 +1,11 @@
+﻿@model CategoryViewModel  
+@*ekranda yazılacak şeyleri direkt stün adı olarak almak yerine kendi istediğimiz şeyleri yazması için viewmodel yükledik. daha sonra buradaki model tipini 
+oluşturduğumuz modelin tipine çevirdik. viewimporta da klasörün yerini tanımladık*@
+
+<form method="post" asp-action="Create" asp-controller="Category">
+    <label asp-for="CategoryName"></label>
+    <input asp-for="CategoryName" /><br />
+    <label asp-for="Description"></label>
+    <input asp-for="Description" />
+    <input type="submit" value="Ekle" class="btn btn-danger"/>
+</form>
