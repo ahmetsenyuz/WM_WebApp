@@ -1,0 +1,18 @@
+﻿@model CategoryViewModel  
+@*ekranda yazılacak şeyleri direkt stün adı olarak almak yerine kendi istediğimiz şeyleri yazması için viewmodel yükledik. daha sonra buradaki model tipini 
+oluşturduğumuz modelin tipine çevirdik. viewimporta da klasörün yerini tanımladık*@
+<div class="text-danger">
+    <div asp-validation-summary="All"></div>  @*hata varsa hata mesajını ekrana yazdırıyor.*@
+</div>
+<form method="post" asp-action="Update" asp-controller="Category">
+    <input asp-for="CategoryId" type="hidden" />
+    <label asp-for="CategoryName"></label>
+    <input asp-for="CategoryName" />
+    <span class="text-danger" asp-validation-for="CategoryName"></span>
+    <br />
+    <label asp-for="Description"></label>
+    <input asp-for="Description" />
+    <span class="text-danger" asp-validation-for="Description"></span>
+
+    <input type="submit" value="Güncelle" class="btn btn-danger" />
+</form>
