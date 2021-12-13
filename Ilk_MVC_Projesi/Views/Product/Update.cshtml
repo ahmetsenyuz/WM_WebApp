@@ -1,0 +1,37 @@
+﻿@model ProductViewModel
+<div class="bg-danger"><div asp-validation-summary="All"></div></div>
+<h2>@Model.ProductName</h2>
+<h3>@($"{Model.UnitPrice:c2}")</h3>
+<form method="post" asp-action="Update" asp-controller="Product">
+    <input asp-for="ProductId" type="hidden" />
+    <div class="row">
+        <div class="col-3 text-black-50">Ürün Adı</div>
+        <div class="col-5">
+            <input asp-for="ProductName" class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3 text-black-50">Fiyat</div>
+        <div class="col-5">
+            <input asp-for="UnitPrice" class="form-control" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3 text-black-50">Kategori Adı</div>
+        <div class="col-5">
+            <select asp-for="CategoryId" asp-items="ViewBag.categoryList" class="form-control"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3 text-black-50">Tedarikçi Adı</div>
+        <div class="col-5">
+            <select asp-for="SupplierId" asp-items="ViewBag.supplierList" class="form-control"></select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-3 text-black-50"></div>
+        <div class="col-5">
+            <input type="submit" value="Güncelle" class="btn alert-danger" />
+        </div>
+    </div>
+</form>
