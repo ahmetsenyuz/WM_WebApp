@@ -4,7 +4,8 @@ oluşturduğumuz modelin tipine çevirdik. viewimporta da klasörün yerini tan�
 <div class="text-danger">
     <div asp-validation-summary="All"></div>  @*hata varsa hata mesajını ekrana yazdırıyor.*@
 </div>
-<form method="post" asp-action="Create" asp-controller="Category">
+
+<form id="frm-add">
     <label asp-for="CategoryName"></label>
     <input asp-for="CategoryName" />
     <span class="text-danger" asp-validation-for="CategoryName"></span>
@@ -15,3 +16,32 @@ oluşturduğumuz modelin tipine çevirdik. viewimporta da klasörün yerini tan�
 
     <input type="submit" value="Ekle" class="btn btn-danger" />
 </form>
+@section Scripts{ 
+    <script>
+        $(function () {
+            $("#frm-add").submit(function (e) {
+                e.preventDefault();
+                var model = {
+                    categoryName: $("#CategoryName").val(),
+                    description: $("#Description").val()
+                };
+                //console.log(model); consola gittiğini kontrol ettik
+                $.ajax({
+                    "headers": {
+                        "Content-Type":"application/json"
+                    },
+                    url: '@Url.Action("AddCategory","CategoryApi")',
+                    type: "post",
+                    data: JSON.stringify(model),
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response.responseText);
+                    },
+                    error: function (request, status, error) {
+                        console.log(request.responseText);
+                    }
+                });
+            });
+        });
+    </script>
+}
