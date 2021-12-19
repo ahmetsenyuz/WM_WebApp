@@ -30,7 +30,7 @@
                         <td style="text-align:center">@item.OrderDetails.Count</td>
                         <td>@item.OrderDetails.Sum(x => x.UnitPrice * x.Quantity * (decimal)(1 - x.Discount)) $</td>
                         <td>
-                            <a class="btn btn-block btn-danger" asp-controller="Category" asp-action="Detail" asp-route-id="@item.CategoryId">Detay</a>
+                            <a class="btn btn-block btn-danger" asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">Detay</a>
                         </td>
                     </tr>
                 }

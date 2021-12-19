@@ -38,7 +38,7 @@
 @section Scripts{ 
 <script>
     $('#confirm-delete').on('show.bs.modal', function (e)){
-        $(this).find('.btn-ok').attr('href', '@Url.Action("Delete","Product",new { id = Model.ProductId })');
+        $(this).find('.btn-ok').attr('href', '@Url.Action("Delete","Product",new { Id = Model.ProductId })');
     }
 </script>
 }
