@@ -25,7 +25,9 @@ oluşturduğumuz modelin tipine çevirdik. viewimporta da klasörün yerini tan�
                     categoryName: $("#CategoryName").val(),
                     description: $("#Description").val()
                 };
-                //console.log(model); consola gittiğini kontrol ettik
+                //console.log(model); //consola gittiğini kontrol ettik
+                var categoryDetailUrl = '@Url.Action("Detail","Category")';
+                //console.log(categoryDetailUrl);
                 $.ajax({
                     "headers": {
                         "Content-Type":"application/json"
@@ -35,7 +37,9 @@ oluşturduğumuz modelin tipine çevirdik. viewimporta da klasörün yerini tan�
                     data: JSON.stringify(model),
                     dataType: "json",
                     success: function (response) {
-                        console.log(response.responseText);
+                        alert(response.message);
+                        window.location.href = `${categoryDetailUrl}/${response.model.categoryId}`;//yamuk tırnak altgr+virgül tuşuyla yapılıyor.
+                            //categoryDetailUrl + "/" + response.model.categoryId;
                     },
                     error: function (request, status, error) {
                         console.log(request.responseText);

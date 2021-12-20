@@ -45,12 +45,13 @@ namespace Ilk_MVC_Projesi.Controllers
                 {
                     return RedirectToAction(nameof(Index));
                 }
+
                 var model = new ProductViewModel()
                 {
                     ProductId = data.ProductId,
-                    CategoryName = data.Category.CategoryName,
+                    CategoryName = data.Category?.CategoryName,
                     CategoryId = data.CategoryId,
-                    CompanyName = data.Supplier.CompanyName,
+                    CompanyName = data.Supplier?.CompanyName,//nullable olması lazım
                     ProductName = data.ProductName,
                     UnitPrice = data.UnitPrice,
                     SupplierId = data.SupplierId
@@ -72,9 +73,9 @@ namespace Ilk_MVC_Projesi.Controllers
                 var model = new ProductViewModel()
                 {
                     ProductId = data.ProductId,
-                    CategoryName = data.Category.CategoryName,
+                    CategoryName = data.Category?.CategoryName,
                     CategoryId = data.CategoryId,
-                    CompanyName = data.Supplier.CompanyName,
+                    CompanyName = data.Supplier?.CompanyName,
                     ProductName = data.ProductName,
                     UnitPrice = data.UnitPrice,
                     SupplierId = data.SupplierId

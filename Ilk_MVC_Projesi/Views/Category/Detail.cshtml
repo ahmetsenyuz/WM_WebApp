@@ -2,10 +2,29 @@
 @{
     var plist = Model.Products;
 }
+<input type="hidden" asp-for="CategoryId"/>
 <h1>@Model.CategoryName</h1>
 <h3>@Model.Description </h3>
 <a asp-action="Create" asp-controller="Category" class="btn btn-danger">Yeni Kategori</a>
 <a asp-action="Delete" asp-controller="Category" asp-route-categoryId=@Model.CategoryId class="btn btn-dark">Kategoriyi Sil</a>
+
+<label>Ürün Ekle</label><input type="checkbox" class="form-check-inline" id="cb-urunekle"/><br />
+
+<form id="frm-add" style="display:none">
+    <div class="row">
+        <div class="col">
+            <input type="text" class="form-control" id="in-urunadi" placeholder="Ürün Adı">
+        </div>
+        <div class="col">
+            <input type="number" min="0" max="99999" class="form-control" id="in-fiyat" placeholder="Fiyat Bilgisi">
+        </div>
+    </div>
+      <div class="row">
+          <div class="col-md-4 container-fluid">
+              <input type="submit" class="btn btn-success form-control" id="btn-urunekle" value="Ürünü Ekle" />
+          </div>
+  </div>
+</form>
 
 <div class="row">
     <div class="col-9">
@@ -18,23 +37,140 @@
                     <th>Siparişleri</th>
                     <th>Hacim</th>
                     <th>Detay</th>
+                    <th>Sil</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody id="tbl-body">
                 @foreach (var item in Model.Products)
                 {
-                    <tr>
-                        <td>@item.ProductName</td>
-                        <td>@item.UnitPrice</td>
-                        <td>@item.Category.CategoryName</td>
-                        <td style="text-align:center">@item.OrderDetails.Count</td>
-                        <td>@item.OrderDetails.Sum(x => x.UnitPrice * x.Quantity * (decimal)(1 - x.Discount)) $</td>
-                        <td>
-                            <a class="btn btn-block btn-danger" asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">Detay</a>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>@item.ProductName</td>
+                    <td>@item.UnitPrice</td>
+                    <td>@item.Category.CategoryName</td>
+                    <td>@item.OrderDetails.Count</td>
+                    <td>@item.OrderDetails.Sum(x => x.UnitPrice * x.Quantity * (decimal)(1 - x.Discount)) $</td>
+                    <td>
+                        <a class="btn btn-block btn-danger" asp-controller="Product" asp-action="Detail" asp-route-id="@item.ProductId">Detay</a>
+                    </td>
+                    <td>
+                        <input type="button" class="btn btn-danger btn-delete" value="SİL" data-toggle="modal" data-target="#confirm-delete" data-id="@item.ProductId" />
+                    </td>
+                </tr>
                 }
             </tbody>
         </table>
     </div>
 </div>
+
+<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="myModalLabel">Silme Onayı</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>Ürün silinecektir. Bu işlemi onaylıyor musunuz?</p>
+                <p class="debug-url"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
+                <a href="product" class="btn btn-danger btn-ok">Sil</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts
+{
+    <script>
+        var productId = 0;
+        $('.btn-delete').click(function () {
+            productId = $(this).attr("data-id");
+        });
+        $('#confirm-delete').on('show.bs.modal', function (e) {
+            $(this).find('.btn-ok').on('click', urunSil);
+        });
+        function urunSil() {
+            console.log(productId);
+            $.ajax({
+                    "headers": {
+                        "Content-Type":"application/json"
+                    },
+                    url: '@Url.Action("Delete","ProductApi")'+'/'+productId,
+                    type: "POST",
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                    },
+                    error: function (request, status, error) {
+                        console.log(request.responseText);
+                    }
+            });
+            //repository design pattern bak
+        }
+
+
+
+        $("#cb-urunekle").click(function () {
+            $("#frm-add").toggle(200);
+        });
+        $("#frm-add").submit(function (e) {
+            e.preventDefault();
+
+            var model = {
+                productName: $("#in-urunadi").val(),
+                unitPrice: $("#in-fiyat").val(),
+                categoryId: $("#CategoryId").val()
+            };
+            $.ajax({
+                    "headers": {
+                        "Content-Type":"application/json"
+                    },
+                    url: '@Url.Action("Add","ProductApi")',
+                    type: "post",
+                    data: JSON.stringify(model),
+                    dataType: "json",
+                    success: function (response) {
+                        console.log(response);
+                        //eklenen üründen sonra sayfayı resfresh yapmadan gözükmesi için bunu yazıyoruz
+                        var model = response.model;
+                        var tr = document.createElement("tr");
+                        var td1 = document.createElement("td");
+                        var td2 = document.createElement("td");
+                        var td3 = document.createElement("td");
+                        var td4 = document.createElement("td");
+                        var td5 = document.createElement("td");
+                        var td6 = document.createElement("td");
+                        var td7 = document.createElement("td7");
+
+                        //var alink = document.createElement("a");
+
+                        $(td1).html(model.productName);
+                        $(td2).html(model.unitPrice);
+                        $(td3).html("@Model.CategoryName");
+                        $(td4).html("0");
+                        $(td5).html("0");
+                        var detailUrl = '@Url.Action("Detail","Product")';
+                        var alink = $("<a></a>")
+                            .attr("href", `${detailUrl}/${model.productId}`)
+                            .addClass("btn btn-block btn-info")
+                            .html("Detay").appendTo(td6);
+                        var alinksil = $("<a></a>")
+                            .attr("href", `${detailUrl}/${model.productId}`)
+                            .addClass("btn btn-block btn-danger")
+                            .html("SİL").appendTo(td6);
+                        /*$(td6).append(alink); appendto yazmasaydım bunu kullanacaktım*/
+
+                        $(tr).append(td1).append(td2).append(td3).append(td4).append(td5).append(td6).appendTo("#tbl-body");/*hepsini trye ekle sonra komplesini tbl-body idli tabloya ekle*/
+                        /***********************************Bu arası*************************************************/
+                    },
+                    error: function (request, status, error) {
+                        console.log(request.responseText);
+                    }
+            });
+
+        });
+
+    </script>
+}
