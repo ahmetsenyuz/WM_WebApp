@@ -65,49 +65,52 @@
 <div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
+
             <div class="modal-header">
-                <h4 class="modal-title" id="myModalLabel">Silme Onayı</h4>
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Silme Onayı</h4>
             </div>
+
             <div class="modal-body">
-                <p>Ürün silinecektir. Bu işlemi onaylıyor musunuz?</p>
+                <p>Ürün silinecektir. Bu işlemin geri dönüşü yoktur!</p>
+                <p>Emin misiniz?</p>
                 <p class="debug-url"></p>
             </div>
+
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Vazgeç</button>
-                <a href="product" class="btn btn-danger btn-ok">Sil</a>
+                <a class="btn btn-danger btn-ok" id="confirm-delete">SİL</a>
             </div>
         </div>
     </div>
 </div>
-
+@*docs.microsoft.com asp.net*@
 @section Scripts
 {
     <script>
         var productId = 0;
-        $('.btn-delete').click(function () {
+        $('.btn-delete').click(function() {
             productId = $(this).attr("data-id");
         });
-        $('#confirm-delete').on('show.bs.modal', function (e) {
+        $("confirm-delete").on('show.bs.modal', function(e) {
             $(this).find('.btn-ok').on('click', urunSil);
         });
         function urunSil() {
             console.log(productId);
             $.ajax({
-                    "headers": {
-                        "Content-Type":"application/json"
-                    },
-                    url: '@Url.Action("Delete","ProductApi")'+'/'+productId,
-                    type: "POST",
-                    dataType: "json",
-                    success: function (response) {
-                        console.log(response);
-                    },
-                    error: function (request, status, error) {
-                        console.log(request.responseText);
-                    }
+                "headers": {
+                    "Content-Type": "application/json"
+                },
+                url: '@Url.Action("Delete", "ProductApi")'+'/'+productId,
+                type: "POST",
+                dataType: "json",
+                success: function(response) {
+                    console.log(response);
+                },
+                error: function(request, status, error) {
+                    console.log(request.responseText);
+                }
             });
-            //repository design pattern bak
         }
 
 

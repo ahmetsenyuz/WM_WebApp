@@ -1,0 +1,16 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+    <script src="~/js/site.js"></script>
+    @await RenderSectionAsync("Scripts", required: false) @*html sayfasına yazılan script kodu bunun içinde renderlernir.Kısaca önce ana javascript kodu derlenir sonra html sayfasına yazılan javascript kodu derlenir.*@
+</body>
+</html>

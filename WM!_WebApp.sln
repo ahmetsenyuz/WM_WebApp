@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31424.327
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Ilk_MVC_Projesi", "Ilk_MVC_Projesi\Ilk_MVC_Projesi.csproj", "{7231783A-6ADB-4642-8C18-CDE90519CD29}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ilk_MVC_Projesi", "Ilk_MVC_Projesi\Ilk_MVC_Projesi.csproj", "{7231783A-6ADB-4642-8C18-CDE90519CD29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LayoutKullanimi", "LayoutKullanimi\LayoutKullanimi.csproj", "{CC4A2D55-2840-4A3B-9DFE-FDB89A8166DF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{7231783A-6ADB-4642-8C18-CDE90519CD29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7231783A-6ADB-4642-8C18-CDE90519CD29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7231783A-6ADB-4642-8C18-CDE90519CD29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CC4A2D55-2840-4A3B-9DFE-FDB89A8166DF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CC4A2D55-2840-4A3B-9DFE-FDB89A8166DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CC4A2D55-2840-4A3B-9DFE-FDB89A8166DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CC4A2D55-2840-4A3B-9DFE-FDB89A8166DF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

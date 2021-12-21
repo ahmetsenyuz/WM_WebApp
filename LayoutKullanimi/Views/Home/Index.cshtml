@@ -1,0 +1,30 @@
+﻿
+@*
+    view imports burada çalışır
+*@
+
+
+@model List<Urun>
+
+@*
+    view starts burada çalışır
+*@
+
+@*@{ 
+//Layout = "_Layout"; view starta yazdığımız için artık buna gerek kalmadı
+//ViewBag.Title = "Anasayfa";
+}*@
+
+
+@foreach (var item in Model)
+{
+    <p>
+    @item.Id - @item.Ad : @($"{item.Fiyat:c2}")  @*c2 demek virgülden sonra 2 basamağını yaz demek*@
+    </p>}
+@section Scripts
+{
+<script>
+    App.name = "Kamil";
+    console.log(App.selamla());
+</script>
+}
