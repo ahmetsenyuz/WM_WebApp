@@ -35,6 +35,23 @@ namespace ItServiceApp
                 options.Password.RequireLowercase = false;
                 options.Password.RequireDigit = true;
                 options.Password.RequiredLength = 5;
+
+                //lockout setting 
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5); //atma süresi
+                options.Lockout.MaxFailedAccessAttempts = 3; //3ten fazla yanlýþ girerse atar
+                options.Lockout.AllowedForNewUsers = false; //kitlediyse kayýt olamasýn
+                //User Setting
+                options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+                options.User.RequireUniqueEmail = true;
+            });
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                //cookie settings
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(5);
+                options.LoginPath = "/Account/Login";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+                options.SlidingExpiration = true;
             });
 
             services.AddControllersWithViews();
