@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ItServiceApp.ViewModels;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,9 @@ namespace ItServiceApp.Controllers
     //asp net identity
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        public IActionResult Index(LoginViewModel model = null)
         {
-            return View();
+            return View(model);
         }
     }
 }

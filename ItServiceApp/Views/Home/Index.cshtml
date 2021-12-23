@@ -1,6 +1,11 @@
 ﻿@{
     ViewBag.Title = "Anasayfa";
 }
+@model LoginViewModel
+@if (Model.UserName != null)
+{
+    <a class="btn btn-danger" asp-controller="Account" asp-action="Logout" method="post">Çıkış Yap</a>
+}
 <!--====== Banner Slider Start ======-->
 <section class="banner-slider banner-slider-one banner-slider-active">
     <div class="single-banner">

@@ -8,6 +8,8 @@ namespace ItServiceApp.ViewModels
 {
     public class RegisterViewModel
     {
+        [Required(ErrorMessage = "Kullanıcı adı alanı gereklidir")]
+        [Display(Name="Kullanıcı Adı")]
         public string UserName { get; set; }
         [Required(ErrorMessage ="Isim Alanı Gereklidir.")]
         [Display(Name = "Ad")]
@@ -20,10 +22,15 @@ namespace ItServiceApp.ViewModels
         [Required(ErrorMessage ="E-posta Alanı Gereklidir.")]
         [EmailAddress]
         public string Email { get; set; }
-        [Required(ErrorMessage ="Şifre Alanı Gereklidir.")]
-        [StringLength(100,MinimumLength = 6, ErrorMessage ="Şifreniz En Az 6 Karakterli olmalıdır.")]
-        [Display(Name="Şifre")]
+        [Required(ErrorMessage = "Şifre alanı gereklidir.")]
+        [StringLength(100, MinimumLength = 6, ErrorMessage = "Şifreniz minimum 6 karaterli olmalıdır!")]
+        [Display(Name = "Şifre")]
+        [DataType(DataType.Password)]
         public string Password { get; set; }
+        [Required(ErrorMessage = "Şifre tekrar alanı gereklidir.")]
+        [DataType(DataType.Password)]
+        [Display(Name = "Şifre Tekrar")]
+        [Compare(nameof(Password), ErrorMessage = "Şifreler uyuşmuyor")]
         public string ConfirmPassword { get; set; }
     }
 }
