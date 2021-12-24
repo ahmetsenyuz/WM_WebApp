@@ -1,5 +1,4 @@
 ﻿@inject SignInManager<ApplicationUser> SignInManager
-
 <header class="header-one sticky-header">
     <div class="header-navigation">
         <div class="container-fluid d-flex align-items-center justify-content-between container-1470">
@@ -98,6 +97,16 @@
                     <div class="nav-toggler">
                         <span></span><span></span><span></span>
                     </div>
+                    <div class="nav-link">
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <a asp-controller="Account" asp-action="Logout">  Admin Paneli</a>
+                        }
+                        else if (User.IsInRole("User"))
+                        {
+                            <p>user</p>
+                        }
+                    </div>
                     <div class="navbar-btn">
                         @if (SignInManager.IsSignedIn(Context.User))
                         {
@@ -108,6 +117,7 @@
                             <a asp-controller="Account" asp-action="Login">Giriş Yap<i class="fal fa-long-arrow-right"></i></a>
                         }
                     </div>
+
                 </div>
             </div>
         </div>

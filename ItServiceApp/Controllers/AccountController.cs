@@ -1,4 +1,6 @@
-﻿using ItServiceApp.Models.Identity;
+﻿using ItServiceApp.Models;
+using ItServiceApp.Models.Identity;
+using ItServiceApp.Services;
 using ItServiceApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -15,12 +17,35 @@ namespace ItServiceApp.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly IEmailSender _emailSender;
         
-        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager )
+        public AccountController(UserManager<ApplicationUser> userManager, 
+            SignInManager<ApplicationUser> signInManager, 
+            RoleManager<ApplicationRole> roleManager,
+            IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
+            _emailSender = emailSender;
+            CheckRoles();
         }
+
+        private void CheckRoles()
+        {
+            foreach (var roleName in RoleModels.Roles)
+            {
+                if (!_roleManager.RoleExistsAsync(roleName).Result)
+                {
+                    var result = _roleManager.CreateAsync(new ApplicationRole()
+                    {
+                        Name = roleName
+                    }).Result;
+                }
+            }
+        }
+
         [HttpGet]
         public IActionResult Register()
         {
@@ -56,9 +81,18 @@ namespace ItServiceApp.Controllers
             if (result.Succeeded)
             {
                 //kullanıcıya rol atama
+                var count = _userManager.Users.Count();
+                result = await _userManager.AddToRoleAsync(user, count == 1 ? RoleModels.Admin : RoleModels.User);//eğer kullanıcı sayısı 1 ise admin,değilse düz user rolü atıyor.
                 //email onay maili
+                await _emailSender.SendAsync(new EmailMessage()
+                {
+                    Contacts = new string[] { user.Email },
+                    Subject = $"{user.UserName} - kullanıcı kayıt oldu.",
+                    Body = $"{user.Name} {user.Surname} isimli kullanıcı {DateTime.Now:g} itibari ile siteye kayıt olmuştur."
+
+                });
                 //login sayfasına yönlendirme
-                return RedirectToAction("Index", "Home");//home controllerın index sayfasına yönlendir
+                return RedirectToAction("Login", "Account");//home controllerın index sayfasına yönlendir
             }
             else
             {
@@ -80,7 +114,15 @@ namespace ItServiceApp.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true);
             if (result.Succeeded)
             {
-                return RedirectToAction("Index", "Home",model);
+                var user = await _userManager.FindByNameAsync(model.UserName);
+                await _emailSender.SendAsync(new EmailMessage()
+                {
+                    Contacts = new string[] { user.Email },
+                    Subject = $"{user.UserName} - kullanıcı giriş yaptı.",
+                    Body = $"{user.Name} {user.Surname} isimli kullanıcı {DateTime.Now:g} itibari ile siteye giriş yapmıştır."
+
+                });
+                return RedirectToAction("Index", "Home");
             }
             else
             {
