@@ -4,22 +4,13 @@
 }
 @*colorzilla chrome eklentisi*@
 <!--====== Page Title start ======-->
-<section class="page-title-area">
-    <div class="container">
-        <h2 class="title">@ViewBag.Title</h2>
-        <ul class="breadcrumb-nav">
-            <li><a asp-controller="Home" asp-action="Index">Anasayfa</a></li>
-            <li class="active">@ViewBag.Title</li>
-        </ul>
-    </div>
-</section>
+<partial name="Partials/_PageTitlePartial" />
 <!--====== Page Title End ======-->
-
 <!--====== Shoping Checkout Start  ======-->
 <section class="shoping-checkout-area section-gap">
     <div class="container">
         <div class="user-actions mb-40">
-            <p>Returning customer? <a href="login">Click here to login</a></p>
+            <p>Hesabınız var mı? <a asp-controller="Account" asp-action="Login">Giriş yapmak için tıklayın</a></p>
         </div>
         <form asp-controller="Account" asp-action="Register" method="post">
             <div class="row">
@@ -82,12 +73,12 @@
     </div>
 </section>
 <!--====== Shoping Checkout End ======-->
-@section Styles{ 
-<style>
-    input{
-        border: solid 1px #e3eeff;
-        height : 50px;
-        padding : 0 15px;
-    }
-</style>
+@section Styles{
+    <style>
+        input {
+            border: solid 1px #e3eeff;
+            height: 50px;
+            padding: 0 15px;
+        }
+    </style>
 }
