@@ -1,13 +1,17 @@
-﻿using ItServiceApp.Models;
+﻿using ItServiceApp.Extensions;
+using ItServiceApp.Models;
 using ItServiceApp.Models.Identity;
 using ItServiceApp.Services;
 using ItServiceApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Encodings.Web;
 using System.Threading.Tasks;
 
 namespace ItServiceApp.Controllers
@@ -82,15 +86,19 @@ namespace ItServiceApp.Controllers
             {
                 //kullanıcıya rol atama
                 var count = _userManager.Users.Count();
-                result = await _userManager.AddToRoleAsync(user, count == 1 ? RoleModels.Admin : RoleModels.User);//eğer kullanıcı sayısı 1 ise admin,değilse düz user rolü atıyor.
+                result = await _userManager.AddToRoleAsync(user, count == 1 ? RoleModels.Admin : RoleModels.Passive);//eğer kullanıcı sayısı 1 ise admin,değilse passive rolü atıyor.
                 //email onay maili
-                await _emailSender.SendAsync(new EmailMessage()
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Scheme);
+
+                var emailMessage = new EmailMessage()
                 {
                     Contacts = new string[] { user.Email },
-                    Subject = $"{user.UserName} - kullanıcı kayıt oldu.",
-                    Body = $"{user.Name} {user.Surname} isimli kullanıcı {DateTime.Now:g} itibari ile siteye kayıt olmuştur."
-
-                });
+                    Subject = "Confirm Your Email",
+                    Body = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>click here</a>"
+                };
+                await _emailSender.SendAsync(emailMessage);
                 //login sayfasına yönlendirme
                 return RedirectToAction("Login", "Account");//home controllerın index sayfasına yönlendir
             }
@@ -99,6 +107,28 @@ namespace ItServiceApp.Controllers
                 ModelState.AddModelError(string.Empty, "Bir hata oluştu");
                 return View(model);
             }
+        }
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string userId, string code)
+        {
+            if (userId == null || code == null)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
+            {
+                return NotFound($"Unable to load user with Id'{userId}'.");
+            }
+            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            ViewBag.StatusMessage = result.Succeeded ? "Thank you for confirming your e-mail." : "Error confirming your e-mail.";
+            if (result.Succeeded && _userManager.IsInRoleAsync(user,RoleModels.Passive).Result)
+            {
+                await _userManager.RemoveFromRoleAsync(user, RoleModels.Passive);
+                await _userManager.AddToRoleAsync(user, RoleModels.User);
+            }
+            return View();
         }
         public IActionResult Login()
         {
@@ -115,13 +145,13 @@ namespace ItServiceApp.Controllers
             if (result.Succeeded)
             {
                 var user = await _userManager.FindByNameAsync(model.UserName);
-                await _emailSender.SendAsync(new EmailMessage()
-                {
-                    Contacts = new string[] { user.Email },
-                    Subject = $"{user.UserName} - kullanıcı giriş yaptı.",
-                    Body = $"{user.Name} {user.Surname} isimli kullanıcı {DateTime.Now:g} itibari ile siteye giriş yapmıştır."
+                //await _emailSender.SendAsync(new EmailMessage()
+                //{
+                //    Contacts = new string[] { user.Email },
+                //    Subject = $"{user.UserName} - kullanıcı giriş yaptı.",
+                //    Body = $"{user.Name} {user.Surname} isimli kullanıcı {DateTime.Now:g} itibari ile siteye giriş yapmıştır."
 
-                });
+                //});çalışıyor
                 return RedirectToAction("Index", "Home");
             }
             else
@@ -136,6 +166,80 @@ namespace ItServiceApp.Controllers
         {
             await _signInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
+        }
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> ProfileAsync()
+        {
+            //var user = await _userManager.FindByIdAsync(HttpContext.User) 
+            //userID ototik gelmiyor o yüzden extension method yapacağız.
+            var user = await _userManager.FindByIdAsync(HttpContext.GetUserId());
+            var model = new UserProfileViewModel()
+            { 
+                Email = user.Email,
+                Name = user.Name,
+                Surname = user.Surname
+            };
+            return View(model);
+        }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> Profile(UserProfileViewModel model)
+        {
+            var user = await _userManager.FindByIdAsync(HttpContext.GetUserId());
+            user.Name = model.Name;
+            user.Surname = model.Surname;
+            if (user.Email != model.Email)
+            {
+                await _userManager.RemoveFromRoleAsync(user, RoleModels.User);
+                await _userManager.AddToRoleAsync(user, RoleModels.Passive);//e mailini değiştiyse rolü userdan pasife geçirdik.
+                //tekrar onaylaması için.
+                user.Email = model.Email;
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Scheme);
+
+                var emailMessage = new EmailMessage()
+                {
+                    Contacts = new string[] { user.Email },
+                    Subject = "Confirm Your Email",
+                    Body = $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>click here</a>"
+                };
+                await _emailSender.SendAsync(emailMessage);
+            }
+            var resuslt = await _userManager.UpdateAsync(user);
+            if (resuslt.Succeeded)
+            {
+                ModelState.AddModelError(string.Empty, ModelState.ToFullErrorString());
+            }
+            return View(model);
+        }
+
+        [Authorize]
+        [HttpGet]
+        public IActionResult UpdatePassword()
+        {
+            return View();
+        }
+        [Authorize]
+        [HttpPost]
+        public async Task<IActionResult> UpdatePassword(PasswordChangeViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await _userManager.FindByIdAsync(HttpContext.GetUserId());
+            var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+            if (result.Succeeded)
+            {
+                ViewBag.Message = "Parola güncelleme işlemi başarılı";
+            }
+            else
+            {
+                ViewBag.Message = $"Bir hata oluştu: {ModelState.ToFullErrorString()}";
+            }
+            return RedirectToAction("Profile");
         }
     }
 }

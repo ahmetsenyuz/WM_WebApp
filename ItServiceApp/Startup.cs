@@ -4,6 +4,7 @@ using ItServiceApp.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -44,7 +45,8 @@ namespace ItServiceApp
                 //User Setting
                 options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
                 options.User.RequireUniqueEmail = true;
-            }).AddEntityFrameworkStores<MyContext>();
+                //options.SignIn.RequireConfirmedEmail = true; //confirm edilmemiþ e maillerin giriþini engelliyor.
+            }).AddEntityFrameworkStores<MyContext>().AddDefaultTokenProviders();
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -67,7 +69,7 @@ namespace ItServiceApp
                 app.UseDeveloperExceptionPage();
             }
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseStaticFiles(); //wwwroot klasöründeki statik dosyalarý kullanabilmek i.in
 
             
             app.UseRouting();
