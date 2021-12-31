@@ -25,8 +25,8 @@ namespace Ilk_MVC_Projesi.Controllers
                 .Include(x=> x.Supplier)//include'da product içinde içer yapıyoruz. Eğer theninclude olsaydı category'nin içine girerdi.
                 .OrderBy(x=> x.Category.CategoryName)
                 .ThenBy(x=> x.ProductName)
-                .Skip((page.GetValueOrDefault()-1) * _pageSize)
-                .Take(_pageSize)
+                .Skip((page.GetValueOrDefault()-1) * _pageSize)//içindeki değer kadar sayıyı baştan atlayıp kalanları getirir.
+                .Take(_pageSize)//pagesize kadar ürünü ekrana getir.
                 .ToList();
             //ViewBag.Categories = _context.Categories.OrderBy(x => x.CategoryName).ToList();
             //ViewBag.Suppliers = _context.Suppliers.OrderBy(x => x.CompanyName).ToList();//viewa birden fazla model göndermeye yarıyor.

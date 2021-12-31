@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Ilk_MVC_Projesi", "Ilk_MVC_
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LayoutKullanimi", "LayoutKullanimi\LayoutKullanimi.csproj", "{CC4A2D55-2840-4A3B-9DFE-FDB89A8166DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ItServiceApp", "ItServiceApp\ItServiceApp.csproj", "{B88A6857-6B4B-41CE-B3B3-C9F9CF7680D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ItServiceApp", "ItServiceApp\ItServiceApp.csproj", "{B88A6857-6B4B-41CE-B3B3-C9F9CF7680D0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "1", "1", "{7C21DD59-4125-48F8-83E1-DCF81EA4FEF5}"
 EndProject

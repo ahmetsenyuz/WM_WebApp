@@ -241,5 +241,6 @@ namespace ItServiceApp.Controllers
             }
             return RedirectToAction("Profile");
         }
+        //https://www.entityframeworktutorial.net/efcore/create-model-for-existing-database-in-ef-core.aspx
     }
 }
