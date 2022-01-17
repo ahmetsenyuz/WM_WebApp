@@ -234,13 +234,88 @@ namespace ItServiceApp.Controllers
             if (result.Succeeded)
             {
                 ViewBag.Message = "Parola güncelleme işlemi başarılı";
+                return RedirectToAction(nameof(Logout));
             }
             else
             {
                 ViewBag.Message = $"Bir hata oluştu: {ModelState.ToFullErrorString()}";
             }
-            return RedirectToAction("Profile");
+            return RedirectToAction(nameof(Profile));
+            //return RedirectToAction("Profile");
         }
         //https://www.entityframeworktutorial.net/efcore/create-model-for-existing-database-in-ef-core.aspx
+        [AllowAnonymous]
+        public IActionResult ResetPassword()
+        {
+            return View();
+        }
+        [AllowAnonymous]
+        [HttpPost]
+        public async Task<IActionResult> ResetPasswordAsync(string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                ViewBag.Message = "Bu maile bağlı bir kullanıcı bulunamadı";
+            }
+            else
+            {
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+                var callbackUrl = Url.Action("ConfirmResetPassword", "Account", new
+                {
+                    userId = user.Id,
+                    code = code
+                }, protocol: Request.Scheme); //email resetleme linki oluşturdu.
+                var emailMessage = new EmailMessage()
+                {
+                    Contacts = new string[] { user.Email },
+                    Body = $"Please reset your password by clicking <a href= '{HtmlEncoder.Default.Encode(callbackUrl)}'>Here!</a>",
+                    Subject = "Reset Password"
+                };
+                await _emailSender.SendAsync(emailMessage);
+                ViewBag.Message = "Mailinize şifre sıfırlama yönergeniz gönderilmiştir.";
+            }
+            return View();
+        }
+        [AllowAnonymous]
+        public IActionResult ConfirmResetPassword(string userId, string code)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(code))
+            {
+                return BadRequest("Hatalı istek");
+            }
+            ViewBag.Code = code;
+            ViewBag.UserId = userId;
+            return View();
+        }
+        [AllowAnonymous,HttpPost] //böyle de yazılabiliyo virgülle
+        public async Task<IActionResult> ConfirmResetPasswordAsync(ResetPasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            var user = await _userManager.FindByIdAsync(model.UserId);
+            if (user == null)
+            {
+                ModelState.AddModelError(string.Empty, "Kullanıcı Bulunamadı");
+                return View();
+            }
+            var code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(model.Code));
+            var result = await _userManager.ResetPasswordAsync(user, code, model.NewPassword);
+            if (result.Succeeded == true)
+            {
+                //email de gönderebilirsin
+                TempData["Message"] = "Şifre değiştirme işlemi tamamlandı";
+                return View();
+            }
+            else
+            {
+                var message = string.Join("<br>", result.Errors.Select(x => x.Description));
+                TempData["Message"] = message;
+                return View();
+            }
+        }
     }
 }
