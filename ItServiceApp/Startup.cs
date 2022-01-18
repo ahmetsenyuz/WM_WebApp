@@ -57,8 +57,10 @@ namespace ItServiceApp
                 options.AccessDeniedPath = "/Account/AccessDenied";
                 options.SlidingExpiration = true;
             });
-
-            services.AddTransient<IEmailSender, EmailSender>();
+            services.AddTransient<IEmailSender, EmailSender>();//loose coupling --yarýn bi gün servis deðiirse git saðdakini sil yeni servis saðlayýcýný yazarsýn
+            services.AddScoped<IPaymentService, IyzicoPaymentService>();//servis tanýmlandý
+            //services.AddScoped<IyzicoPaymentService>(); üsttekiyle ayn iþi yapýyor ancak yarýn bi gün servis saðlaycý deðiþir iþe gidip Payment kontrollerdaki 
+            //yorum sATIRI þeklinde tanýmlanan yerler de deðiþecekti.tasarým desenleri ve mimarileri engin bulut
             services.AddAutoMapper(options =>
             {
                 options.AddProfile<PaymentProfile>();
