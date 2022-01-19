@@ -26,7 +26,7 @@ namespace ItServiceApp.Test
             {
                 var result = _paymentService.CheckInstallments(bin, 1000);
             }
-            Assert.Equal(true, true);
+            //Assert.Equal(true, true);
         }
     }
 }
