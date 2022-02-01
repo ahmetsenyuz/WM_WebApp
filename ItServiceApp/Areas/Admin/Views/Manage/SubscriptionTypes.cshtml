@@ -26,15 +26,15 @@
 <script>
     var daraGrid = null;
     $(()=>{
-        var url = '../../../api/userapi';
+        var url = '../../../api/SubscriptionTypeApi';
         dataGrid = $("#dxGrid").dxDataGrid({
             remoteOperations: {paging: true, filtering: true, sorting: true, grouping: true, summary: true, groupPaging: true },
             dataSource: DevExpress.data.AspNet.createStore({
                 key: 'id',
                 loadUrl: `${url}/get`,
                 updateUrl: `${url}/update`,
-                //insertUrl: `${url}/InsertOrder`,
-                //deleteUrl: `${url}/DeleteOrder`,
+                insertUrl: `${url}/Insert`,
+                deleteUrl: `${url}/Delete`,
                 onBeforeSen(method,ajaxOptions){
                     ajaxOptions.xhrFields = {withCredentials: true};
                     console.log(method);
@@ -43,7 +43,9 @@
             }),
             editing:{
                 mode:'form',
-                allowUpdating: true
+                allowUpdating: true,
+                allowAdding: true,
+                allowDeleting: true
             },
             allowColumnResizing: true,
             showColumnLines: true,
@@ -62,7 +64,7 @@
             headerFilter: {visible: true},
             export:{
                 enabled: true,
-                fileName: `Tüm Kullanıcılar_${parseInt(Math.random()*1000000000)}`,
+                fileName: `Tüm Üyelikler_${parseInt(Math.random()*1000000000)}`,
                 allowExportSelectedData: true
             },
             paging: {pageSize: 20},
@@ -85,16 +87,19 @@
                 dataField:"name"
             },
             {
-                caption: 'Soyad',
-                dataField:"surname"
+                caption: 'Açıklama',
+                dataField:"description"
             },
             {
-                caption: 'Kullanıcı Adı',
-                dataField:"userName"
+                caption: 'Ay',
+                dataField:"month",
+                dataType: "number"
             },
             {
-                caption: 'Email',
-                dataField:"email"
+                caption: 'Fiyat',
+                dataField:"price",
+                dataType: "number",
+                format : "#.## TL"
             },
             {
                     dataField: "createdDate",
@@ -102,13 +107,7 @@
                     dataType: "datetime",
                     format: "dd/MM/yyyy HH:mm",
                     sortOrder: "desc"
-                },
-                {
-                caption: 'Onaylanmış',
-                dataField:"emailConfirmed",
-                //dataType: "string"
-                dataType: "boolean"
-            }
+                }
             ]
         }).dxDataGrid("instance");
     });
