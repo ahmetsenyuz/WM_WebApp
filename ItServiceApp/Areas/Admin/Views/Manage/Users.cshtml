@@ -99,10 +99,16 @@
             {
                     dataField: "createdDate",
                     caption: "Kayıt Tarihi",
-                    dataType: "date",
+                    dataType: "datetime",
                     format: "dd/MM/yyyy HH:mm",
                     sortOrder: "desc"
-                }
+                },
+                {
+                caption: 'Onaylanmış',
+                dataField:"emailConfirmed",
+                //dataType: "string"
+                dataType: "boolean"
+            }
             ]
         }).dxDataGrid("instance");
     });
