@@ -9,14 +9,18 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace ItServiceApp
 {
+    //https://www.syncfusion.com/products/communitylicense
+    //https://js.devexpress.com/Demos/WidgetsGallery/Demo/DataGrid/Overview/jQuery/Light/
     public class Startup
     {
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -78,8 +82,12 @@ namespace ItServiceApp
                 app.UseDeveloperExceptionPage();
             }
             app.UseHttpsRedirection();
-            app.UseStaticFiles(); //wwwroot klasöründeki statik dosyaları kullanabilmek i.in
-
+            app.UseStaticFiles(); //wwwroot klasöründeki statik dosyaları kullanabilmek için
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), @"node_modules")),
+                RequestPath = new PathString("/vendor")
+            });//kullanabilmek için node_modules klasörünü de wwwrot gibi static file olduğunu tanıtıyoruz.
             
             app.UseRouting();
             app.UseAuthentication();//login logout kullanabilmek için
@@ -98,3 +106,6 @@ namespace ItServiceApp
         }
     }
 }
+
+//open project in file explorer, type cmd, npm, npm init, npm i ==> projedeki paketleri indirir(package.jsondaki), öte türlü aynı adımlar ama her biri
+//nde npm i paketin adı

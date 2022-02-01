@@ -11,11 +11,12 @@
 
     <!-- App favicon -->
     <link rel="shortcut icon" href="~/admin-assets/images/favicon.ico">
-    <link rel="stylesheet" href="~/admin-assets/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/admin-assets/css/jquery-ui.min.css"/>
+    <link rel="stylesheet" href="~/admin-assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/admin-assets/css/jquery-ui.min.css" />
     <link href="~/admin-assets/css/icons.min.css" rel="stylesheet" />
     <link href="~/admin-assets/css/metisMenu.min.css" rel="stylesheet" />
     <link href="~/admin-assets/css/app.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="~/vendor/devextreme/dist/css/dx.greenmist.css">
     @await RenderSectionAsync("Styles",required:false)
 </head>
 @*v sharper*@
@@ -55,7 +56,11 @@
     <script src="~/admin-assets/js/jquery.slimscroll.min.js"></script>
     <script src="~/admin-assets/plugins/apexcharts/apexcharts.min.js"></script>
     <script src="~/admin-assets/js/app.js"></script>
-
+    <script type="text/javascript" src="~/vendor/exceljs/dist/exceljs.min.js"></script>
+    <script type="text/javascript" src="~/vendor/file-saver/dist/fileSaver.min.js"></script>
+    <script type="text/javascript" src="~/vendor/jszip/dist/jszip.min.js"></script>
+    <script type="text/javascript" src="~/vendor/jquery/dist/jquery.min.js"></script>
+    <script type="text/javascript" src="~/vendor/devextreme/dist/js/dx.all.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
