@@ -64,4 +64,5 @@
     </div>
 </section>
 <!--====== Banner Slider End ======-->
-<partial name="Partials/_PricingTable" model="Model"/>
+@*<partial name="Partials/_PricingTable" model="Model"/>*@
+@await Component.InvokeAsync("PricingTable")

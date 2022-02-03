@@ -14,18 +14,21 @@ namespace ItServiceApp.Controllers
     //asp net identity
     public class HomeController : Controller
     {
-        private readonly MyContext _myContext;
-        private readonly IMapper _mapper;
-        public HomeController(MyContext myContext, IMapper mapper)
-        {
-            _myContext = myContext;
-            _mapper = mapper;
-        }
+        //private readonly MyContext _myContext;
+        //private readonly IMapper _mapper;
+        //public HomeController(MyContext myContext, IMapper mapper)
+        //{
+        //    _myContext = myContext;
+        //    _mapper = mapper;
+        //}
         public IActionResult Index()
         {
-            var model = _myContext.SubscriptionTypes.OrderBy(x => x.Price).ToList()
-                .Select(x => _mapper.Map<SubscriptionTypeViewModel>(x)).ToList();//önemli burası incele Mapper tolistten sonra yazıldı!!! Aşağıdaki yorum satırıyla aynı işi
+            //var model = _myContext.SubscriptionTypes.OrderBy(x => x.Price).ToList()
+             //   .Select(x => _mapper.Map<SubscriptionTypeViewModel>(x)).ToList();//önemli burası incele Mapper tolistten sonra yazıldı!!! Aşağıdaki yorum satırıyla aynı işi
             //yapıyor. Bir satırda!!!!!
+
+
+
 
             //var data = new List<SubscriptionTypeViewModel>();
             //var query = _myContext.SubscriptionTypes.OrderBy(x=> x.Price).ToList();
@@ -41,7 +44,8 @@ namespace ItServiceApp.Controllers
             //    });
             //}
 
-            return View(model);
+            //return View(model);
+            return View();
         }
     }
 }
