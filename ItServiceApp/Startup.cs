@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Hosting;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -70,9 +71,17 @@ namespace ItServiceApp
             {
                 options.AddProfile<PaymentProfile>();
                 //options.AddProfile(typeof(PaymentProfile)); ya böyle ya da üstteki gibi ama ayný bok
+                options.AddProfile<EntityProfile>();
             });
-            services.AddControllersWithViews();
+            //baðlý taplolardan iç içe veri döngüsü olmamasý için yazýyoruz. Öðrneðin kiþi tablosu ve il tablosu gibi bire çok iliþkili tablolarda
+            //kiþiyi okuyor ilini okuyor ilden tekrar kiþiyi okuyor sonra kiþiden tekrar il vsvs.
+            services.AddControllersWithViews().AddNewtonsoftJson(options=>
+                {
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
         }
+
+        //https://obfuscator.io/ javascript kodunu þifrelemeye yarýyor.
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

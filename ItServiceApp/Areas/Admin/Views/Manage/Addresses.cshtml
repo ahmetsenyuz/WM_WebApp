@@ -1,5 +1,5 @@
 ﻿@{
-    ViewBag.Title = "Üyelik Tipleri";
+    ViewBag.Title = "Adresler";
 }
 
 <div class="container-fluid">
@@ -9,7 +9,7 @@
                 <div class="card-header">
                     <div class="row align-items-center">
                         <div class="col">
-                            <h4 class="card-title">Üyelik Tipleri</h4>
+                            <h4 class="card-title">Adresler</h4>
                         </div> @*end col*@
                     </div> @*end row*@
                 </div> @*end card header*@
@@ -26,7 +26,7 @@
 <script>
     var daraGrid = null;
     $(()=>{
-        var url = '../../../api/SubscriptionTypeApi';
+        var url = '../../../api/AddressApi';
         dataGrid = $("#dxGrid").dxDataGrid({
             remoteOperations: {paging: true, filtering: true, sorting: true, grouping: true, summary: true, groupPaging: true },
             dataSource: DevExpress.data.AspNet.createStore({
@@ -83,32 +83,31 @@
                     formItem: {visible: false}
             },
             {
-                caption: 'Ad',
-                dataField:"name",
-                sortOrder: "asc"
+                caption: 'Sokak',
+                dataField:"line"
             },
             {
-                caption: 'Açıklama',
-                dataField:"description"
+                caption: 'Posta Kodu',
+                dataField:"postCode"
             },
             {
-                caption: 'Ay',
-                dataField:"month",
-                dataType: "number",
-                sortOrder: "asc"
-            },
-            {
-                caption: 'Fiyat',
-                dataField:"price",
-                dataType: "number",
-                format : "#.## TL"
-            },
-            {
-                    dataField: "createdDate",
-                    caption: "Kayıt Tarihi",
-                    dataType: "datetime",
-                    format: "dd/MM/yyyy HH:mm",
-                }
+                caption: 'AdresTipi',
+                dataField:"addressType"
+            }
+            //,
+            //{
+            //    caption: 'Fiyat',
+            //    dataField:"price",
+            //    dataType: "number",
+            //    format : "#.## TL"
+            //},
+            //{
+            //        dataField: "createdDate",
+            //        caption: "Kayıt Tarihi",
+            //        dataType: "datetime",
+            //        format: "dd/MM/yyyy HH:mm",
+            //        sortOrder: "desc"
+            //    }
             ]
         }).dxDataGrid("instance");
     });

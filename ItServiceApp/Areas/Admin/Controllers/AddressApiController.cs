@@ -6,7 +6,6 @@ using ItServiceApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
 using System.Linq;
@@ -15,10 +14,10 @@ namespace ItServiceApp.Areas.Admin.Controllers
 {
     [Route("api/[controller]/[action]")]
     [Authorize(Roles = "Admin")]
-    public class SubscriptionTypeApiController : Controller
+    public class AddressApiController : Controller
     {
         private readonly MyContext _dbContext;
-        public SubscriptionTypeApiController(MyContext dbContext)
+        public AddressApiController(MyContext dbContext)
         {
             _dbContext = dbContext;
         }
@@ -26,19 +25,19 @@ namespace ItServiceApp.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult Get(DataSourceLoadOptions loadOptions)
         {
-            var data = _dbContext.SubscriptionTypes.Include(x => x.Subscriptions);
-            return Ok(DataSourceLoader.Load(data,loadOptions));
+            var data = _dbContext.SubscriptionTypes;
+            return Ok(DataSourceLoader.Load(data, loadOptions));
         }
         [HttpGet]
         public IActionResult Detail(Guid id, DataSourceLoadOptions loadOptions)
         {
-            var data = _dbContext.SubscriptionTypes.Where(x => x.Id == id);
+            var data = _dbContext.Addresses.Where(x => x.Id == id);
             return Ok(DataSourceLoader.Load(data, loadOptions));
         }
         [HttpPost]
         public IActionResult Insert(string values)
         {
-            var data = new SubscriptionType();
+            var data = new Address();
             JsonConvert.PopulateObject(values, data);
             if (!TryValidateModel(data))
             {
@@ -48,14 +47,14 @@ namespace ItServiceApp.Areas.Admin.Controllers
                     ErrorMessage = ModelState.ToFullErrorString()
                 });
             }
-            _dbContext.SubscriptionTypes.Add(data);
+            _dbContext.Addresses.Add(data);
             var result = _dbContext.SaveChanges();
             if (result == 0)
             {
                 return BadRequest(new JsonResponseViewModel()
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Yeni Üyelik Tipi Kaydedilemedi"
+                    ErrorMessage = "Adres Kaydedilemedi"
                 });
             }
             return Ok(new JsonResponseViewModel());
@@ -63,32 +62,32 @@ namespace ItServiceApp.Areas.Admin.Controllers
         [HttpPut]
         public IActionResult Update(Guid key, string values)
         {
-            var data = _dbContext.SubscriptionTypes.Find(key);
+            var data = _dbContext.Addresses.Find(key);
             if (data == null)
                 return BadRequest(new JsonResponseViewModel()
                 {
                     IsSuccess = false,
                     ErrorMessage = ModelState.ToFullErrorString(),
                 });
-            JsonConvert.PopulateObject(values,data);
-            if(!TryValidateModel(data))
+            JsonConvert.PopulateObject(values, data);
+            if (!TryValidateModel(data))
                 return BadRequest(ModelState.ToFullErrorString());
             var result = _dbContext.SaveChanges();
             if (result == 0)
                 return BadRequest(new JsonResponseViewModel()
                 {
                     IsSuccess = false,
-                    ErrorMessage = "Üyelik Tipi Güncellenemedi"
+                    ErrorMessage = "Adres Güncellenemedi"
                 });
             return Ok(new JsonResponseViewModel());
         }
         [HttpDelete]
         public IActionResult Delete(Guid key)
         {
-            var data = _dbContext.SubscriptionTypes.Find(key);
+            var data = _dbContext.Addresses.Find(key);
             if (data == null)
-                return StatusCode(StatusCodes.Status409Conflict, "Üyelik Tipi Bulunamadı");
-            _dbContext.SubscriptionTypes.Remove(data);
+                return StatusCode(StatusCodes.Status409Conflict, "Adres Bulunamadı");
+            _dbContext.Addresses.Remove(data);
             var result = _dbContext.SaveChanges();
             if (result == 0)
                 return BadRequest("Silme işlemi başarısız");
