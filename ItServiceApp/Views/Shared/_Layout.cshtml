@@ -1,5 +1,4 @@
 ﻿<!DOCTYPE html>
-
 <html>
 <head>
     <!--====== Required meta tags ======-->
@@ -11,7 +10,7 @@
     <!--====== Title ======-->
     <title>@ViewBag.Title - IT Solutions & Digital Services</title>
     <!--====== Favicon Icon ======-->
-    <link rel="shortcut icon" href="~/~/assets/img/favicon.ico" type="img/png" />
+    <link rel="shortcut icon" href="~/assets/img/favicon.ico" type="img/png" />
     <!--====== Bootstrap css ======-->
     <link rel="stylesheet" href="~/assets/css/bootstrap.min.css" />
     <!--====== Slick Slider ======-->
@@ -24,8 +23,7 @@
     <link rel="stylesheet" href="~/assets/css/font-awesome.min.css" />
     <!--====== Main Css ======-->
     <link rel="stylesheet" href="~/assets/css/style.css" />
-    @await RenderSectionAsync("Styles",false) @*daha sonra başka html üzerinden değişiklik yapmamızı sağlar. Örneğin register 
-                                                  view'ında inputların rengini ve kalınlığını değiştirdik.*@
+    @await RenderSectionAsync("Styles",false)
 </head>
 <body>
     <!--====== Preloader Start ======-->
@@ -72,6 +70,6 @@
     <script src="~/assets/js/wow.min.js"></script>
     <!--====== Main JS ======-->
     <script src="~/assets/js/main.js"></script>
-    @await RenderSectionAsync("Scripts", false) @*Bu da viewler içinde scriptlerle oynamamızı sağlıyor.*@
+    @await RenderSectionAsync("Scripts",false)
 </body>
 </html>

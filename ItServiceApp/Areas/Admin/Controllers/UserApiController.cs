@@ -1,7 +1,5 @@
 ﻿using DevExtreme.AspNet.Data;
 using ItServiceApp.Extensions;
-using ItServiceApp.Models.Identity;
-using ItServiceApp.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -9,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Threading.Tasks;
+using ItServiceApp.Core.Identity;
+using ItServiceApp.Core.ViewModels;
 
 namespace ItServiceApp.Areas.Admin.Controllers
 {

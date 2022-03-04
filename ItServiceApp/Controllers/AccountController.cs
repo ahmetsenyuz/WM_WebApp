@@ -1,14 +1,12 @@
-﻿using ItServiceApp.Extensions;
-using ItServiceApp.Models;
-using ItServiceApp.Models.Identity;
-using ItServiceApp.Services;
-using ItServiceApp.ViewModels;
+﻿using ItServiceApp.Business.Services.Email;
+using ItServiceApp.Core.ComplexTypes;
+using ItServiceApp.Core.Identity;
+using ItServiceApp.Core.ViewModels;
+using ItServiceApp.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.WebUtilities;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -144,6 +142,7 @@ namespace ItServiceApp.Controllers
             var result = await _signInManager.PasswordSignInAsync(model.UserName, model.Password, model.RememberMe, true);
             if (result.Succeeded)
             {
+
                 var user = await _userManager.FindByNameAsync(model.UserName);
                 //await _emailSender.SendAsync(new EmailMessage()
                 //{
